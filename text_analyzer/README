@@ -1,0 +1,11 @@
+Project 1. Text File Analyzer 
+
+Idea:
+-> give the code a .txt file and have it report some topics like: number of words, number of specific character, what is the longest word etc.
+
+What are the concepts I will be working on?
+-> strings
+-> I/O
+-> functions
+-> loops
+
