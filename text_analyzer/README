@@ -9,3 +9,13 @@ What are the concepts I will be working on?
 -> functions
 -> loops
 
+
+-----------------------------------------------------------22.8.2026
+Things to add?
+-> edge cases such as: 1) empty file 2) file only containing white space 3) multiple consecutive spaces 4) file that doesnt exist 
+-> functions 1) shortest word 2) average word length 3) number of sentences/lines 4) list of unique words? 5) find a specific word 6) a list of most used words?
+
+-> can I introduce std::string_view?
+-> try out some more of the std::string methods
+-> maybe at the end find a way how could i make the code work where we dont have to run through the text X amount of times to do each function rather once but it tracks multiple things?! 
+-> maybe play with std::cin and how to protect it from bad input, i have a learncpp lesson on that

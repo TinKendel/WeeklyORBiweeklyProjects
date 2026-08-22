@@ -11,21 +11,19 @@ void numberOfCharacters(const std::string& text)
 void numberOfWords(const std::string& text)
 {
     // In case the text has no words
-    // Need to update this in case where there is only whitespace because for now it goes through which it shouldn't
     if (text.size() < 1)
     {
         std::cout << "There are no words in the file!\n";
         return;
     }
 
-    // If we passed the first if than we need to have at least one word
     std::size_t total_number_of_words {0};
     bool currently_in_word {false};
     for (const auto& character : text)
     {
         if (std::isspace(character))
         {
-            std::cout << "Whitespace!\n";
+            // std::cout << "Whitespace!\n";
             if (currently_in_word)
                 ++total_number_of_words;
 
@@ -33,7 +31,7 @@ void numberOfWords(const std::string& text)
         }
         else
         {
-            std::cout << "Char!\n";
+            // std::cout << "Char!\n";
             currently_in_word = true;
         }
     }
@@ -53,10 +51,56 @@ void numberOfWhitespaces(const std::string& text)
     std::cout << "Total number of whitespaces: " << total_number_of_whitespace << '\n';
 }
 
-// void theLargestWord(const std::string& text)
-// {
-//     std::size_t word_size {};
-// }
+void theLargestWord(const std::string& text)
+{
+    std::size_t current_word_size           {};
+    std::size_t size_of_the_largest_word    {};
+    std::size_t starting_index_for_the_largest_word  {};
+    std::size_t string_index                {};
+
+    for (const auto& character : text)
+    {
+        if (character == ',' || isspace(character))
+        {
+            if (current_word_size != 0)
+            {    
+                if (size_of_the_largest_word < current_word_size)
+                {    
+                    size_of_the_largest_word = current_word_size;
+                    starting_index_for_the_largest_word = string_index - current_word_size;
+                }
+            }
+            
+            current_word_size = 0;
+        }
+        else
+        {
+            ++current_word_size;
+        }
+        
+        ++string_index;
+    }
+
+    std::string longest_word {text.substr(starting_index_for_the_largest_word, size_of_the_largest_word)};
+
+    std::cout << "The size of the longest word is: " << size_of_the_largest_word << '\n';
+    std::cout << "And the word is: " << longest_word << '\n';
+}
+
+void countSpecificCharacter(const std::string& text, const char specific_character)
+{
+    std::size_t specific_character_count {};
+
+    for (const auto& character : text)
+    {
+        if (character == specific_character)
+        {
+            ++specific_character_count;
+        }
+    }
+
+    std::cout << "You chose " << specific_character << " and that character occurred " << specific_character_count << " times\n";
+}
 
 int main()
 {
@@ -64,7 +108,7 @@ int main()
 
     // I want to change this to not be hard coded but im leaving it as is for now
     std::string txt_file_path {"res/lorem_ipsum.txt"};
-    // I need to open the file
+
     // Ifstream is for reading files 
     // Ofstream is for writing in files
     std::ifstream ifstream;
@@ -83,6 +127,13 @@ int main()
     numberOfCharacters(text);
     numberOfWhitespaces(text);
     numberOfWords(text);
+    theLargestWord(text);
+
+    char users_specific_character {};
+    std::cout << "Choose a character: ";
+    std::cin >> users_specific_character;
+    countSpecificCharacter(text, users_specific_character);
+
 
     return 0;
 }
