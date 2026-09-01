@@ -1,11 +1,13 @@
 #include <fstream>
 #include <cstddef> // for std::size_t
 #include <cctype>
+#include <string_view>  // for string_view
+#include <cstring> // std::strerror
 #include <iostream>
 
 void numberOfCharacters(const std::string& text)
 {
-    std::cout << "Total number of characters (excluding whitespaces): " << text.size() << '\n';
+    std::cout << "Total number of characters (including whitespaces): " << text.size() << '\n';
 }
 
 void numberOfWords(const std::string& text)
@@ -51,14 +53,14 @@ void numberOfWhitespaces(const std::string& text)
     std::cout << "Total number of whitespaces: " << total_number_of_whitespace << '\n';
 }
 
-void theLargestWord(const std::string& text)
+void theLargestWord(std::string_view sv_text)
 {
     std::size_t current_word_size           {};
     std::size_t size_of_the_largest_word    {};
     std::size_t starting_index_for_the_largest_word  {};
     std::size_t string_index                {};
 
-    for (const auto& character : text)
+    for (const auto& character : sv_text)
     {
         if (character == ',' || isspace(character))
         {
@@ -81,7 +83,7 @@ void theLargestWord(const std::string& text)
         ++string_index;
     }
 
-    std::string longest_word {text.substr(starting_index_for_the_largest_word, size_of_the_largest_word)};
+    std::string_view longest_word {sv_text.substr(starting_index_for_the_largest_word, size_of_the_largest_word)};
 
     std::cout << "The size of the longest word is: " << size_of_the_largest_word << '\n';
     std::cout << "And the word is: " << longest_word << '\n';
@@ -114,6 +116,13 @@ int main()
     std::ifstream ifstream;
     ifstream.open(txt_file_path);
 
+    // Check if there was an error when opening the txt file
+    if (ifstream.fail())
+    {
+        std::cout << "An error has occurred: " << std::strerror(errno);
+        return 1;
+    }
+
     // Read the file line by line and save it to a string
     std::string line {};
     std::string text {};
@@ -122,6 +131,13 @@ int main()
     {
         line.push_back('\n');
         text += line;
+    }
+
+    // Check if we have an empty txt file
+    if (text.empty())
+    {
+        std::cout << "The txt file is empty\n";
+        return 1;
     }
 
     numberOfCharacters(text);
