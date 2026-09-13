@@ -12,7 +12,7 @@ What are the concepts I will be working on?
 
 -----------------------------------------------------------22.8.2026
 Things to add?
--> edge cases such as: 1) empty file 2) file only containinvg white space 3) multiple consecutive spaces 4) file that doesnt exist 
+-> edge cases such as: 1) empty file 2) file only containing white space 3) multiple consecutive spaces 4) file that doesnt exist 
 -> functions 1) shortest word 2) average word length 3) number of sentences/lines 4) list of unique words? 5) find a specific word 6) a list of most used words?
 
 -> can I introduce std::string_view?
@@ -23,3 +23,16 @@ Things to add?
 -----------------------------------------------------------1.9.2026.
 Things that I have added :
 1) empty file check 2) file that doesn't exist check 3) briefly introduced std::string_view
+
+-----------------------------------------------------------3.9.2026.
+Found out why we have extra char -> its because for each line i am adding \n that gets counted as character
+
+-----------------------------------------------------------12.9.2026. & 13.9.2026
+Things that I have added:
+Functions 1) shortest word 2) average word length 3) find a specific word
+Add protection for cin 
+
+----------------------------------------------------------- Conclusion 
+-> there are still things I could add, like functions for list of unique words, functions for extracting sentences etc... Make only one pass through the text and not 10times...
+-> Feel like I got a better understanding for string and its methods, and a bit of string_view
+-> For now I am leaving this project as is

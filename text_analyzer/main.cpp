@@ -3,6 +3,8 @@
 #include <cctype>
 #include <string_view>  // for string_view
 #include <cstring> // std::strerror
+#include <limits> // included for numeric_limits
+#include <iomanip> // included for std::setprecision 
 #include <iostream>
 
 void numberOfCharacters(const std::string& text)
@@ -89,7 +91,7 @@ void theLargestWord(std::string_view sv_text)
     std::cout << "And the word is: " << longest_word << '\n';
 }
 
-void countSpecificCharacter(const std::string& text, const char specific_character)
+void countSpecificCharacter(std::string_view text, const char specific_character)
 {
     std::size_t specific_character_count {};
 
@@ -102,6 +104,141 @@ void countSpecificCharacter(const std::string& text, const char specific_charact
     }
 
     std::cout << "You chose " << specific_character << " and that character occurred " << specific_character_count << " times\n";
+}
+
+void findTheShortestWord(const std::string_view text)
+{
+    std::size_t current_length_of_word      {};
+    std::size_t size_of_the_shortest_word   {std::numeric_limits<std::size_t>::max()};
+    std::size_t index_of_the_shortest_word  {};
+
+    bool end_of_word                        {false};
+    std::size_t current_index_in_text       {};
+
+    for (const auto& character : text)
+    {
+        if (character == ',' || isspace(character))
+        {
+            if (!end_of_word)
+            {
+                if (current_length_of_word < size_of_the_shortest_word)
+                {
+                    size_of_the_shortest_word = current_length_of_word;
+                    index_of_the_shortest_word = current_index_in_text - current_length_of_word;
+                }
+
+                current_length_of_word = 0;
+                end_of_word = true;
+            }
+        }
+        else
+        {
+            end_of_word = false;
+            ++current_length_of_word;
+        }
+        
+        ++current_index_in_text;
+    }
+
+    std::cout << "The size of the shortest word is: " << size_of_the_shortest_word << '\n';
+    std::cout << "The shortest word is: " << text.substr(index_of_the_shortest_word, size_of_the_shortest_word) << '\n';
+}
+
+void averageWordLength(std::string_view text)
+{
+    size_t total_length_of_words {};
+    size_t total_number_of_words {};
+    bool end_of_word             {false};
+
+    for (const auto& character : text)
+    {
+        if (character == ',' || isspace(character))
+        {
+            if(!end_of_word)
+            {
+                ++total_number_of_words;
+            }
+
+            end_of_word = true;
+        }
+        else
+        {
+            end_of_word = false;
+            ++total_length_of_words;
+        }
+    }
+
+    if (total_number_of_words == 0)
+    {
+        std::cout << "The average word length is: 0\n";
+        return;
+    }
+
+    double result {static_cast<double>(total_length_of_words) / static_cast<double>(total_number_of_words)};
+    std::cout << "The average word length is: " << std::setprecision(3) << result << '\n';
+}
+
+void findTheSpecificWord(std::string_view text, std::string_view users_word)
+{
+    std::size_t index_of_found_word {text.find(users_word)};
+    
+    if (index_of_found_word != std::string_view::npos)
+    {
+        std::cout << "The word that the user requested exists! And it starts at index: " << index_of_found_word << '\n';
+    }
+    else
+    {
+        std::cout << "The word that the user requested doesn't exist!\n";
+    }
+}
+
+// Returns true if std::cin has unextracted input on the current line
+bool hasUnextractedInput()
+{
+    return !std::cin.eof() && std::cin.peek() != '\n';
+}
+
+void ignoreLine()
+{
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+void askUserForInput(std::string_view text)
+{
+    char users_specific_character {};
+    while (true)
+    {
+        std::cout << "Choose a character: ";
+        std::cin >> users_specific_character;
+        
+        // If the user has written more than one character we retry again
+        if (hasUnextractedInput())
+        {
+            ignoreLine();
+            continue;
+        }
+        break;
+    }
+    
+    countSpecificCharacter(text, users_specific_character);
+
+
+    std::string users_specific_word {};
+    while (true)
+    {
+
+        std::cout << "Write a word you are looking for: ";
+        std::cin >> users_specific_word;
+
+        if (hasUnextractedInput())
+        {
+            ignoreLine();
+            continue;
+        }
+        break;
+    }
+
+    findTheSpecificWord(text, users_specific_word);
 }
 
 int main()
@@ -117,7 +254,7 @@ int main()
     ifstream.open(txt_file_path);
 
     // Check if there was an error when opening the txt file
-    if (ifstream.fail())
+    if (ifstream.fail()) // More common would be to use ! like this -> if (!ifstream)...
     {
         std::cout << "An error has occurred: " << std::strerror(errno);
         return 1;
@@ -129,7 +266,7 @@ int main()
 
     while (std::getline(ifstream, line))
     {
-        line.push_back('\n');
+        line.push_back('\n'); // I have noticed that this makes my functions work "unexpectedly" since \n adds a character to each line
         text += line;
     }
 
@@ -144,12 +281,12 @@ int main()
     numberOfWhitespaces(text);
     numberOfWords(text);
     theLargestWord(text);
+    findTheShortestWord(text);
+    averageWordLength(text);
 
-    char users_specific_character {};
-    std::cout << "Choose a character: ";
-    std::cin >> users_specific_character;
-    countSpecificCharacter(text, users_specific_character);
+    std::cout << "++++++++++++++++++ User input ++++++++++++++++++\n";
 
+    askUserForInput(text);
 
     return 0;
 }
