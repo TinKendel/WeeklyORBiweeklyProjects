@@ -34,5 +34,10 @@ Add protection for cin
 
 ----------------------------------------------------------- Conclusion 
 -> there are still things I could add, like functions for list of unique words, functions for extracting sentences etc... Make only one pass through the text and not 10times...
+-> Maybe remove the \n adding for each line after reading the text...
 -> Feel like I got a better understanding for string and its methods, and a bit of string_view
--> For now I am leaving this project as is
+-> For now I am leaving this project as is 
+
+-> Note for myself 
+:: remember the way you extract lines/text, because I was adding \n at the end of every line without even realizing, that made me confused later when the functions were adding characters that I couldn't see 
+because I forgot I was adding the new line... :D

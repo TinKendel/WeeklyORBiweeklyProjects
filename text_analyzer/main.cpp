@@ -7,11 +7,13 @@
 #include <iomanip> // included for std::setprecision 
 #include <iostream>
 
+// Find the number of characters that are present in the text
 void numberOfCharacters(const std::string& text)
 {
     std::cout << "Total number of characters (including whitespaces): " << text.size() << '\n';
 }
 
+// Find the number of words that are present in the text
 void numberOfWords(const std::string& text)
 {
     // In case the text has no words
@@ -43,6 +45,7 @@ void numberOfWords(const std::string& text)
     std::cout << "The total number of words: " << total_number_of_words << '\n';
 }
 
+// Find the number of whitespaces in the text
 void numberOfWhitespaces(const std::string& text)
 {
     std::size_t total_number_of_whitespace {};
@@ -55,6 +58,7 @@ void numberOfWhitespaces(const std::string& text)
     std::cout << "Total number of whitespaces: " << total_number_of_whitespace << '\n';
 }
 
+// Find the largest word in the text
 void theLargestWord(std::string_view sv_text)
 {
     std::size_t current_word_size           {};
@@ -71,7 +75,7 @@ void theLargestWord(std::string_view sv_text)
                 if (size_of_the_largest_word < current_word_size)
                 {    
                     size_of_the_largest_word = current_word_size;
-                    starting_index_for_the_largest_word = string_index - current_word_size;
+                    starting_index_for_the_largest_word = string_index - current_word_size; // Current string index - current word size gets us to the begining index of the word (saves us a variable)
                 }
             }
             
@@ -91,6 +95,7 @@ void theLargestWord(std::string_view sv_text)
     std::cout << "And the word is: " << longest_word << '\n';
 }
 
+// Sums up the number of specific characters that the user requested
 void countSpecificCharacter(std::string_view text, const char specific_character)
 {
     std::size_t specific_character_count {};
@@ -106,6 +111,7 @@ void countSpecificCharacter(std::string_view text, const char specific_character
     std::cout << "You chose " << specific_character << " and that character occurred " << specific_character_count << " times\n";
 }
 
+// Finds the shortest word in the text
 void findTheShortestWord(const std::string_view text)
 {
     std::size_t current_length_of_word      {};
@@ -144,6 +150,7 @@ void findTheShortestWord(const std::string_view text)
     std::cout << "The shortest word is: " << text.substr(index_of_the_shortest_word, size_of_the_shortest_word) << '\n';
 }
 
+// Gives the user the average word length
 void averageWordLength(std::string_view text)
 {
     size_t total_length_of_words {};
@@ -178,6 +185,7 @@ void averageWordLength(std::string_view text)
     std::cout << "The average word length is: " << std::setprecision(3) << result << '\n';
 }
 
+// Output the specific word that the user requested if it exists
 void findTheSpecificWord(std::string_view text, std::string_view users_word)
 {
     std::size_t index_of_found_word {text.find(users_word)};
@@ -198,6 +206,7 @@ bool hasUnextractedInput()
     return !std::cin.eof() && std::cin.peek() != '\n';
 }
 
+// Ignores all characters after the first one got extracted
 void ignoreLine()
 {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
