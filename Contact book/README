@@ -1,6 +1,17 @@
 Project 2. Contact book 
 (Look for ways to add this >> files, Bit flag / permissions)
 
+What are the concepts I will be working on?
+-> structs
+-> strings
+-> functions
+-> switch
+-> loops
+-> file I/O
+-> references
+-> string_view
+-> bit manipulation / flags
+
 Goal:
 
 1. Add contact
@@ -37,3 +48,8 @@ Contact:
 So with the flags I would need more functions like
 1. Toggle favorite
 2. Toggle work
+
+
+I did just started learning more about classes while doing my learncpp course, and this project 
+would be a great fit for it, like making the contact book a class and then adding its member functions
+and variables. Maybe later once i finish with that chapter! 
