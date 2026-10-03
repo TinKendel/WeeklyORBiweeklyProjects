@@ -1,0 +1,39 @@
+Project 2. Contact book 
+(Look for ways to add this >> files, Bit flag / permissions)
+
+Goal:
+
+1. Add contact
+2. Find contact
+3. Delete contact
+4. Show contacts
+5. Save
+6. Load
+7. Quit
+
+For example:
+
+Name: Alex
+Phone: 123456
+Email: alex@example.com
+
+-----------------------------------------------------------3.10.2026.
+-> Still thinking how could i structure this project and I think i have an idea:
+1. Add contact
+2. Find contact
+3. Delete contact
+4. Show contacts
+5. Save contacts
+6. Load contacts
+7. Quit
+
+A contact can have many things member variables:
+Contact:
+    Name
+    Phone
+    Email
+    Flags -> 0001 = Favorite, 0010 = Work, 0100 = Family, 1000 = Has phone (Because we are learning things otherwise this could be a simpler variable and not a bit flag)
+
+So with the flags I would need more functions like
+1. Toggle favorite
+2. Toggle work
