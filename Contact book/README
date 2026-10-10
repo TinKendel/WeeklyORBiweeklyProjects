@@ -11,6 +11,8 @@ What are the concepts I will be working on?
 -> references
 -> string_view
 -> bit manipulation / flags
+-> template
+-> namespace
 
 Goal:
 

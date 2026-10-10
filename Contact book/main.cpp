@@ -7,35 +7,41 @@
 #include <vector>
 #include <iostream>
 
-//-------------------------------------- Input check
+/*
+ TODO
 
-void ignoreLine()
-{
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
+ 1) What if a contact doesn't have an email address or a number etc we should be able to write a filler of some sort (like '/' or 'X')
+ or maybe even make the variables of contact be pointers that way we can include null pointers 
+*/
 
-// Returns true if extraction failed, false otherwise
-bool clearFailedExtraction()
+namespace HandleInvalidInput
 {
-    // Check for failed extraction 
-    if (!std::cin)  // If the previous extraction failed
+    // Ignores extraneous characters
+    void ignoreLine()
     {
-        if (std::cin.eof()) // If the stream was closed
-        {
-            std::exit(0);
-        }
-
-        std::cin.clear(); // Put us back in "normal" operation mode
-        ignoreLine();
-
-        return true;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
-    return false;
+    // Returns true if extraction failed, false otherwise
+    bool clearFailedExtraction()
+    {
+        // Check for failed extraction 
+        if (!std::cin)  // If the previous extraction failed
+        {
+            if (std::cin.eof()) // If the stream was closed
+            {
+                std::exit(0);
+            }
+
+            std::cin.clear(); // Put us back in "normal" operation mode
+            ignoreLine();
+
+            return true;
+        }
+
+        return false;
+    }
 }
-
-
-//--------------------------------------
 
 // Namespace with functions that are only used for adding new contacts
 namespace AddContactInfo
@@ -63,16 +69,16 @@ namespace AddContactInfo
         }
     }
 
-    int phoneNumber()
+    std::string phoneNumber()
     {
         while (true)
         {
-            int phone_number {};
+            std::string phone_number {};
 
             std::cout << "Enter the phone number of the contact\n";
             std::cin >> phone_number; 
 
-            if (clearFailedExtraction())
+            if (HandleInvalidInput::clearFailedExtraction())
             {
                 std::cout << "Input invalid. Please try again.\n";
                 continue;
@@ -82,29 +88,73 @@ namespace AddContactInfo
             return phone_number;
         }
     }
-}
 
-void addContact(std::vector<Contact>& contact_book)
-{
-    // const Contact contact { "Ivan Horvat", 69902349, "alex@mint.com" };
-    // std::cout << "Created contact -> "
-    //           << "Full name: " << contact.full_name 
-    //           << " | Phone number: " << contact.phone_number 
-    //           << " | Email: " << contact.email << '\n';
-
-    // contact_book.push_back(contact);
-
-    std::cout << "Adding contact...\n";
-    
-    while (true)
+    std::string emailAddress()
     {
-        std::string full_name   { AddContactInfo::fullName() };
-        int phone_number        { AddContactInfo::phoneNumber() };
+        while (true) 
+        {
+            std::string email_address {};
+            std::cout << "Enter the full email address of the contact\n";
+            std::getline(std::cin >> std::ws, email_address);
 
-        break; // remove later
+            std::cout << "The full email address of the contact is " << email_address << '\n';
+            return email_address;
+        }
     }
 
-    std::cout << "DONE\n";
+    bool checkContactBeforeAdding(const std::string_view full_name, const std::string_view phone_number, const std::string_view email_address)
+    {   
+        bool add_contact {};
+
+        while (true)
+        {
+            std::cout << "Are you sure you want to add the contact? If yes type 1 if not type 0.\n";
+            std::cout << "Contact name: " << full_name 
+                    << ", phone number " << phone_number 
+                    << ", email address " << email_address
+                    << '\n';
+
+            std::cin >> add_contact;
+
+            if (HandleInvalidInput::clearFailedExtraction())
+            {
+                std::cout << "Input invalid. Please try again.\n";
+                continue;
+            }
+            
+            if (add_contact)
+            {
+                std::cout << "Contact has been added to your contact book!\n";
+                return true;
+            }
+            else
+            {
+                std::cout << "Contact has not been added to your contact book!\n";
+                return false;
+            }
+        }
+    }
+}
+
+void  addContact(std::vector<Contact>& contact_book)
+{
+    while (true)
+    {
+        const std::string full_name     { AddContactInfo::fullName() };
+        const std::string phone_number  { AddContactInfo::phoneNumber() };
+        const std::string email_address { AddContactInfo::emailAddress() };
+
+        // Check if everything is right
+        if (!AddContactInfo::checkContactBeforeAdding(full_name, phone_number, email_address))
+        {
+            continue;
+        }
+
+
+        Contact contact {full_name, phone_number, email_address};
+        contact_book.push_back(contact);
+        return;
+    }
 }
 
 void deleteContact(std::vector<Contact>& contact_book)
@@ -140,13 +190,18 @@ void findContact(const std::vector<Contact>& contact_book/* We could place here 
    std::cout << "Function is empty!\n";
 }
 
-void showContact(const std::vector<Contact>& contact_book)
+void showContacts(const std::vector<Contact>& contact_book)
 {
-    // For now im making it simple, i will just print out the first contact
-    const Contact contact { contact_book.front() };
-    std::cout << "Full name: " << contact.full_name 
-              << " | Phone number: " << contact.phone_number 
-              << " | Email: " << contact.email << '\n';
+    int number_of_contact {};
+
+    for (const auto& contact : contact_book)
+    {
+        std::cout << ++number_of_contact << ')'
+                  << " Full name: " << contact.full_name 
+                  << " | Phone number: " << contact.phone_number 
+                  << " | Email: " << contact.email 
+                  << '\n';
+    }
 }
 
 int getInstruction()
@@ -157,6 +212,12 @@ int getInstruction()
 
         int number_to_proceed {};
         std::cin >> number_to_proceed;
+
+        if (HandleInvalidInput::clearFailedExtraction())
+        {
+            std::cout << "Input invalid. Please try again.\n";
+            continue;
+        }
 
         switch (number_to_proceed)
         {
@@ -209,7 +270,22 @@ int main()
             printManual();
             continue;
         case 1:
-        
+            addContact(contact_book);
+            continue;
+        case 2:
+            findContact(contact_book);
+            continue;
+        case 3: 
+            deleteContact(contact_book);
+            continue;
+        case 4: 
+            showContacts(contact_book);
+            continue;
+        // Work in progress, need to add the rest of the cases...
+        // case 5:
+        //     continue;
+        // case 6:
+        //     continue;
         case 7:
             std::cout << "Quit\n"; // An option to save before quit would be cool
             quit = true;
@@ -219,11 +295,6 @@ int main()
             std::cout << "Something has gone horribly wrong!\n";
         };          
     }
-
-    addContact(contact_book);
-    // deleteContact(contact_book);
-    // showContact(contact_book);
-
 
     //---------------------------------------------------------------------------------
 

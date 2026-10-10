@@ -7,8 +7,7 @@
 struct Contact
 {
     std::string full_name {};
-    // maybe add a phone number prefix for country?
-    int phone_number {};
+    std::string phone_number {};
     std::string email {}; 
 };
 
