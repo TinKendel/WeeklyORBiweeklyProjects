@@ -30,6 +30,7 @@ Email: alex@example.com
 
 -----------------------------------------------------------3.10.2026.
 -> Still thinking how could i structure this project and I think i have an idea:
+0. List commands (Manual)
 1. Add contact
 2. Find contact
 3. Delete contact
