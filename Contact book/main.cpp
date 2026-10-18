@@ -225,6 +225,11 @@ void findContact(const std::vector<Contact>& contact_book/* We could place here 
 
         we also need to take care about wrong inputs etc
     */
+
+
+    /*
+        For now im not sure what could this function do differently to the functions that shows all the contacts
+    */
    std::cout << "Function is empty!\n";
 }
 
@@ -240,6 +245,23 @@ void showContacts(const std::vector<Contact>& contact_book)
                   << " | Email: " << contact.email 
                   << '\n';
     }
+}
+
+void saveContacts(const std::vector<Contact>& contact_book)
+{
+    std::ofstream fs {"contact_book.csv"};
+
+    if (!fs.is_open())
+    {
+        std::cout << "Failed to open!\n";    
+    }
+
+    for (const auto& contact : contact_book)
+    {
+        fs << contact.full_name << ',' << contact.phone_number << ',' << contact.email << '\n';
+    }
+    
+    fs.close();
 }
 
 int getInstruction()
@@ -320,8 +342,9 @@ int main()
             showContacts(contact_book);
             continue;
         // Work in progress, need to add the rest of the cases...
-        // case 5:
-        //     continue;
+        case 5:
+            saveContacts(contact_book);
+            continue;
         // case 6:
         //     continue;
         case 7:
