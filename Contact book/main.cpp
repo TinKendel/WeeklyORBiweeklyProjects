@@ -108,11 +108,13 @@ namespace AddContactInfo
 
         while (true)
         {
-            std::cout << "Are you sure you want to add the contact? If yes type 1 if not type 0.\n";
             std::cout << "Contact name: " << full_name 
-                    << ", phone number " << phone_number 
-                    << ", email address " << email_address
-                    << '\n';
+                << ", phone number " << phone_number 
+                << ", email address " << email_address
+                << '\n';
+            
+            std::cout << "**********************************************************************\n";
+            std::cout << "Are you sure you want to add the contact? If yes type 1 if not type 0.\n";
 
             std::cin >> add_contact;
 
@@ -159,22 +161,58 @@ void  addContact(std::vector<Contact>& contact_book)
 
 void deleteContact(std::vector<Contact>& contact_book)
 {
-    // add all sorts of edge cases so that the user cant write something that doesnt make sense...
     /*
-    for example
-    while (true)
-    std::cout write a name...
-    std::cin....
+        We have a vector full of contacts, we want to give the power to the user so that
+        he can type the name of the Contact and we find it and delete it.
+
+        if we find multiple results we display them etc...
+        they they pick what they want to delete.
+
+        I could also make the same logic for contact number/email... (but dont want to as this is just an example)
     */
 
-    // For now just a simple delete will work
-    // Not the nicest output but will work on it later
-    const Contact contact { contact_book.front() };
-    std::cout << "Full name: " << contact.full_name 
-            << " | Phone number: " << contact.phone_number 
-            << " | Email: " << contact.email
-            << " HAS BEEN DELETED!\n";
-    contact_book.pop_back();
+    if (contact_book.size() == 0)
+    {
+        std::cout << "There are no contacts to delete!\n";
+        return;
+    }
+
+    while (true)
+    {
+        std::string contact_full_name {};
+
+        std::cout << "Enter the full name of the contact you want to delete: "; 
+        std::cin >> contact_full_name;
+
+        if (HandleInvalidInput::clearFailedExtraction())
+        {
+            std::cout << "Input invalid. Please try again.\n";
+            continue;
+        }
+
+        /* Chat gave me this solution when had trouble with erase function since i didn't realize what iterators are
+            for (auto it = contact_book.begin(); it != contact_book.end(); ++it)
+            {
+                if (it->full_name == contact_full_name)
+                {
+                    contact_book.erase(it);
+                    return;
+                }
+            }
+        */
+
+        for (size_t i {}; i < contact_book.size(); ++i)
+        {
+            if (contact_book[i].full_name == contact_full_name)
+            {
+                std::cout << contact_book[i].full_name << " has been deleted!\n";
+                contact_book.erase(contact_book.begin() + i);
+                return;
+            }
+        }
+
+        std::cout << "Contact not found. Please try again.\n";
+    }
 }
 
 // potentially add a template for the key
