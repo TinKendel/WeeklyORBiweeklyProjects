@@ -1,5 +1,6 @@
 #include "contact.h"
 
+#include <sstream>
 #include <algorithm>
 #include <chrono>
 #include <limits>
@@ -274,6 +275,56 @@ void saveContacts(const std::vector<Contact>& contact_book)
     fs.close();
 }
 
+void loadContacts(std::vector<Contact>& contact_book)
+{
+    // Here we ask the user for the path of the csv file where we get the data form a contact
+    std::string users_csv_path {"D:/VSCode practice/WeeklyORBiweeklyProjects/Contact book/test.csv"};
+    std::ifstream fs (users_csv_path);
+
+    if(!fs.is_open())
+    {
+        std::cout << "Failed to open!\n";   
+        return;
+    }
+
+    std::cout << "*************************************************************\n";
+    std::cout << "Loading in the new contacts...\n";
+
+    // Remove the old contacts
+    contact_book.clear();
+
+    std::string line {};
+    while(std::getline(fs, line))
+    {
+        Contact contact {};
+        std::stringstream ss(line);
+        std::string cell {};
+
+        for (std::size_t index {}; index < 3; ++index)
+        {
+            if  (index == 0)
+            {
+                std::getline(ss, cell, ',');
+                contact.full_name = cell;
+            }
+            else if (index == 1)
+            {
+                std::getline(ss, cell, ',');
+                contact.phone_number = cell;
+            }
+            else
+            {
+                std::getline(ss, cell, ',');
+                contact.email = cell;
+            }
+        }
+
+        contact_book.push_back(contact);
+    }
+
+    fs.close();
+}
+
 int getInstruction()
 {
     while (true)
@@ -351,12 +402,12 @@ int main()
         case 4: 
             showContacts(contact_book);
             continue;
-        // Work in progress, need to add the rest of the cases...
         case 5:
             saveContacts(contact_book);
             continue;
-        // case 6:
-        //     continue;
+        case 6:
+            loadContacts(contact_book);
+            continue;
         case 7:
             std::cout << "Quit\n"; // An option to save before quit would be cool
             quit = true;
