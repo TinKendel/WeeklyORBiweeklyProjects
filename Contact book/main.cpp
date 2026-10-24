@@ -1,5 +1,7 @@
 #include "contact.h"
 
+#include <algorithm>
+#include <chrono>
 #include <limits>
 #include <string_view>
 #include <string>
@@ -249,11 +251,19 @@ void showContacts(const std::vector<Contact>& contact_book)
 
 void saveContacts(const std::vector<Contact>& contact_book)
 {
-    std::ofstream fs {"contact_book.csv"};
+    auto now { std::chrono::system_clock::now() };
+    auto time { std::chrono::system_clock::to_time_t(now) };
+    std::string time_s { std::ctime(&time) };
+
+    time_s.erase(std::remove(time_s.begin(), time_s.end(), '\n'), time_s.cend());
+    std::replace(time_s.begin(), time_s.end(), ':', '-');
+
+    std::ofstream fs {time_s + ".csv"};
 
     if (!fs.is_open())
     {
-        std::cout << "Failed to open!\n";    
+        std::cout << "Failed to open!\n";   
+        return;
     }
 
     for (const auto& contact : contact_book)
